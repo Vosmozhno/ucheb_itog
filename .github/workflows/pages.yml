@@ -1,0 +1,73 @@
+name: Test and publish Поход
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  database:
+    name: PostgreSQL security and booking rules
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tour_rental_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v6
+      - name: Apply schema and run server tests in an isolated database
+        run: |
+          psql -h 127.0.0.1 -U postgres -d tour_rental_test -v ON_ERROR_STOP=1 -f tool/test_auth_schema.sql
+          for migration in supabase/migrations/*.sql; do
+            psql -h 127.0.0.1 -U postgres -d tour_rental_test -v ON_ERROR_STOP=1 -f "$migration"
+          done
+          psql -h 127.0.0.1 -U postgres -d tour_rental_test -v ON_ERROR_STOP=1 -f supabase/seed.sql -f supabase/tests/security_test.sql
+  build:
+    name: Flutter checks and web build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.7'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test tool/*.dart
+      - run: flutter analyze
+      - run: flutter test
+      - name: Build with the repository base path
+        run: flutter build web --release --base-href /ucheb_itog/ --no-web-resources-cdn --dart-define-from-file=config/production.json --dart-define=AUTH_ROLE_DEMO=true
+      - run: python3 tool/prepare_web.py
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/web
+  deploy:
+    name: Publish GitHub Pages
+    if: github.event_name != 'pull_request'
+    needs: [database, build]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

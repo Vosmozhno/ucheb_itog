@@ -1,0 +1,525 @@
+[
+  {
+    "key": "categories",
+    "title": "Категории",
+    "singular": "Категория",
+    "fields": [
+      {
+        "key": "name",
+        "label": "Название",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 80,
+        "unique": true
+      },
+      {
+        "key": "description",
+        "label": "Описание",
+        "type": "text",
+        "required": false,
+        "min": 0,
+        "max": 500,
+        "wide": true
+      }
+    ],
+    "columns": [
+      "name",
+      "description"
+    ],
+    "searchFields": [
+      "name"
+    ],
+    "filterFields": [],
+    "select": "*"
+  },
+  {
+    "key": "brands",
+    "title": "Производители",
+    "singular": "Производитель",
+    "fields": [
+      {
+        "key": "name",
+        "label": "Название",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 80,
+        "unique": true
+      },
+      {
+        "key": "country",
+        "label": "Страна",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 60
+      }
+    ],
+    "columns": [
+      "name",
+      "country"
+    ],
+    "searchFields": [
+      "name",
+      "country"
+    ],
+    "filterFields": [
+      "country"
+    ],
+    "select": "*"
+  },
+  {
+    "key": "locations",
+    "title": "Пункты проката",
+    "singular": "Пункт проката",
+    "fields": [
+      {
+        "key": "name",
+        "label": "Название",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 80,
+        "unique": true
+      },
+      {
+        "key": "address",
+        "label": "Адрес",
+        "type": "text",
+        "required": true,
+        "min": 5,
+        "max": 200,
+        "wide": true
+      },
+      {
+        "key": "phone",
+        "label": "Телефон",
+        "type": "phone",
+        "required": true,
+        "min": 10,
+        "max": 30
+      }
+    ],
+    "columns": [
+      "name",
+      "address",
+      "phone"
+    ],
+    "searchFields": [
+      "name",
+      "address"
+    ],
+    "filterFields": [],
+    "select": "*"
+  },
+  {
+    "key": "equipment",
+    "title": "Снаряжение",
+    "singular": "Модель снаряжения",
+    "fields": [
+      {
+        "key": "name",
+        "label": "Название",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 120,
+        "wide": true
+      },
+      {
+        "key": "sku",
+        "label": "Артикул",
+        "type": "text",
+        "required": true,
+        "min": 3,
+        "max": 30,
+        "unique": true
+      },
+      {
+        "key": "category_id",
+        "label": "Категория",
+        "type": "reference",
+        "required": true,
+        "min": 1,
+        "max": 2147483647,
+        "reference": "categories"
+      },
+      {
+        "key": "brand_id",
+        "label": "Производитель",
+        "type": "reference",
+        "required": true,
+        "min": 1,
+        "max": 2147483647,
+        "reference": "brands"
+      },
+      {
+        "key": "daily_rate",
+        "label": "Стоимость, ₽/сутки",
+        "type": "integer",
+        "required": true,
+        "min": 1,
+        "max": 50000
+      },
+      {
+        "key": "deposit",
+        "label": "Залог, ₽",
+        "type": "integer",
+        "required": true,
+        "min": 0,
+        "max": 300000
+      },
+      {
+        "key": "weight_grams",
+        "label": "Вес, г",
+        "type": "integer",
+        "required": true,
+        "min": 0,
+        "max": 500000
+      },
+      {
+        "key": "description",
+        "label": "Описание",
+        "type": "text",
+        "required": false,
+        "min": 0,
+        "max": 1000,
+        "wide": true
+      }
+    ],
+    "columns": [
+      "name",
+      "sku",
+      "category_id",
+      "daily_rate",
+      "deposit"
+    ],
+    "searchFields": [
+      "name",
+      "sku"
+    ],
+    "filterFields": [
+      "category_id",
+      "brand_id",
+      "daily_rate"
+    ],
+    "select": "*,category:categories(id,name),brand:brands(id,name)"
+  },
+  {
+    "key": "units",
+    "title": "Экземпляры",
+    "singular": "Экземпляр",
+    "fields": [
+      {
+        "key": "inventory_code",
+        "label": "Инвентарный номер",
+        "type": "text",
+        "required": true,
+        "min": 3,
+        "max": 30,
+        "unique": true
+      },
+      {
+        "key": "equipment_id",
+        "label": "Модель",
+        "type": "reference",
+        "required": true,
+        "min": 1,
+        "max": 2147483647,
+        "reference": "equipment"
+      },
+      {
+        "key": "location_id",
+        "label": "Пункт проката",
+        "type": "reference",
+        "required": true,
+        "min": 1,
+        "max": 2147483647,
+        "reference": "locations"
+      },
+      {
+        "key": "state",
+        "label": "Состояние",
+        "type": "choice",
+        "required": true,
+        "min": 0,
+        "max": 200,
+        "choices": {
+          "ready": "Готов к аренде",
+          "maintenance": "На проверке",
+          "retired": "Списан"
+        }
+      },
+      {
+        "key": "acquired_on",
+        "label": "Дата приобретения",
+        "type": "date",
+        "required": true,
+        "min": 0,
+        "max": 200
+      },
+      {
+        "key": "note",
+        "label": "Примечание",
+        "type": "text",
+        "required": false,
+        "min": 0,
+        "max": 500,
+        "wide": true
+      }
+    ],
+    "columns": [
+      "inventory_code",
+      "equipment_id",
+      "location_id",
+      "state"
+    ],
+    "searchFields": [
+      "inventory_code"
+    ],
+    "filterFields": [
+      "equipment_id",
+      "location_id",
+      "state"
+    ],
+    "select": "*,equipment:equipment(id,name,daily_rate,deposit),location:locations(id,name)"
+  },
+  {
+    "key": "customers",
+    "title": "Клиенты",
+    "singular": "Клиент",
+    "fields": [
+      {
+        "key": "full_name",
+        "label": "ФИО",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 100,
+        "wide": true
+      },
+      {
+        "key": "email",
+        "label": "Контактная почта",
+        "type": "email",
+        "required": true,
+        "min": 0,
+        "max": 254,
+        "unique": true
+      },
+      {
+        "key": "phone",
+        "label": "Телефон",
+        "type": "phone",
+        "required": true,
+        "min": 10,
+        "max": 30
+      }
+    ],
+    "columns": [
+      "full_name",
+      "email",
+      "phone"
+    ],
+    "searchFields": [
+      "full_name",
+      "email",
+      "phone"
+    ],
+    "filterFields": [],
+    "select": "*"
+  },
+  {
+    "key": "loyalty_cards",
+    "title": "Карты лояльности",
+    "singular": "Карта лояльности",
+    "fields": [
+      {
+        "key": "customer_id",
+        "label": "Клиент",
+        "type": "reference",
+        "required": true,
+        "min": 1,
+        "max": 2147483647,
+        "reference": "customers"
+      },
+      {
+        "key": "number",
+        "label": "Номер карты",
+        "type": "text",
+        "required": true,
+        "min": 9,
+        "max": 9,
+        "unique": true
+      },
+      {
+        "key": "discount_percent",
+        "label": "Скидка, %",
+        "type": "integer",
+        "required": true,
+        "min": 0,
+        "max": 10
+      },
+      {
+        "key": "issued_on",
+        "label": "Дата выдачи",
+        "type": "date",
+        "required": true,
+        "min": 0,
+        "max": 200
+      },
+      {
+        "key": "expires_on",
+        "label": "Действует до",
+        "type": "date",
+        "required": true,
+        "min": 0,
+        "max": 200
+      }
+    ],
+    "columns": [
+      "number",
+      "customer_id",
+      "discount_percent",
+      "expires_on"
+    ],
+    "searchFields": [
+      "number"
+    ],
+    "filterFields": [
+      "customer_id"
+    ],
+    "select": "*,customer:customers(id,full_name)"
+  },
+  {
+    "key": "services",
+    "title": "Услуги",
+    "singular": "Услуга",
+    "fields": [
+      {
+        "key": "name",
+        "label": "Название",
+        "type": "text",
+        "required": true,
+        "min": 2,
+        "max": 80,
+        "unique": true
+      },
+      {
+        "key": "price",
+        "label": "Стоимость, ₽",
+        "type": "integer",
+        "required": true,
+        "min": 0,
+        "max": 50000
+      },
+      {
+        "key": "description",
+        "label": "Описание",
+        "type": "text",
+        "required": false,
+        "min": 0,
+        "max": 500,
+        "wide": true
+      }
+    ],
+    "columns": [
+      "name",
+      "price",
+      "description"
+    ],
+    "searchFields": [
+      "name"
+    ],
+    "filterFields": [],
+    "select": "*"
+  },
+  {
+    "key": "rentals",
+    "title": "Аренды",
+    "singular": "Аренда",
+    "fields": [
+      {
+        "key": "customer_id",
+        "label": "Клиент",
+        "type": "reference",
+        "required": true,
+        "min": 1,
+        "max": 2147483647,
+        "reference": "customers"
+      },
+      {
+        "key": "location_id",
+        "label": "Пункт проката",
+        "type": "reference",
+        "required": true,
+        "min": 1,
+        "max": 2147483647,
+        "reference": "locations"
+      },
+      {
+        "key": "start_on",
+        "label": "Начало аренды",
+        "type": "date",
+        "required": true,
+        "min": 0,
+        "max": 200
+      },
+      {
+        "key": "end_on",
+        "label": "Возврат (дата не включается)",
+        "type": "date",
+        "required": true,
+        "min": 0,
+        "max": 200
+      },
+      {
+        "key": "unit_ids",
+        "label": "Снаряжение",
+        "type": "multiReference",
+        "required": true,
+        "min": 0,
+        "max": 200,
+        "reference": "units",
+        "wide": true
+      },
+      {
+        "key": "service_ids",
+        "label": "Дополнительные услуги",
+        "type": "multiReference",
+        "required": false,
+        "min": 0,
+        "max": 200,
+        "reference": "services",
+        "wide": true
+      },
+      {
+        "key": "notes",
+        "label": "Комментарий",
+        "type": "text",
+        "required": false,
+        "min": 0,
+        "max": 500,
+        "wide": true
+      }
+    ],
+    "columns": [
+      "id",
+      "customer_id",
+      "start_on",
+      "end_on",
+      "status",
+      "total_cost"
+    ],
+    "searchFields": [
+      "notes"
+    ],
+    "filterFields": [
+      "status",
+      "location_id",
+      "start_on"
+    ],
+    "select": "*,customer:customers(id,full_name),location:locations(id,name),rental_items(unit_id,equipment_name,inventory_code,daily_rate,deposit),rental_services(service_id,service_name,price)"
+  }
+]

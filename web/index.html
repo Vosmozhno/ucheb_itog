@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Поход — прокат туристического снаряжения. Выбор дат, проверка доступности и бронирование онлайн.">
+  <meta name="theme-color" content="#285c46">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <title>Поход — прокат снаряжения</title>
+  <style>
+    html,body{margin:0;background:#f4f6f2;color:#1d3025;font-family:Arial,sans-serif}
+    #startup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;box-sizing:border-box}
+    .mark{font-size:30px;letter-spacing:5px;font-weight:700;color:#285c46;margin-bottom:24px}
+    .spinner{width:30px;height:30px;border:3px solid #dce4da;border-top-color:#285c46;border-radius:50%;animation:spin 1s linear infinite;margin:24px auto}
+    button{padding:12px 20px;border:0;border-radius:8px;background:#285c46;color:white;font-size:16px;cursor:pointer}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(prefers-reduced-motion:reduce){.spinner{animation-duration:3s}}
+  </style>
+</head>
+<body>
+  <div id="startup" role="status" aria-live="polite"><div><div class="mark">▲ ПОХОД</div><div class="spinner"></div><p id="startup-text">Готовим снаряжение…</p><button id="retry" hidden onclick="location.reload()">Повторить загрузку</button></div></div>
+  <script>
+    let startupTimer=setTimeout(()=>window.showStartupError(),25000);
+    window.showStartupError=function(){const label=document.getElementById('startup-text');if(label){label.textContent='Загрузка занимает больше времени. Проверьте интернет и повторите попытку.';document.getElementById('retry').hidden=false;}};
+    window.addEventListener('flutter-first-frame',()=>{clearTimeout(startupTimer);document.getElementById('startup')?.remove();},{once:true});
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

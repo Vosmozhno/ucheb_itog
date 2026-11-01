@@ -1,0 +1,262 @@
+{
+  "categories": {
+    "name": {
+      "type": "text",
+      "required": true,
+      "min": 2,
+      "max": 80,
+      "unique": true
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "min": 0,
+      "max": 500
+    }
+  },
+  "brands": {
+    "name": {
+      "type": "text",
+      "required": true,
+      "min": 2,
+      "max": 80,
+      "unique": true
+    },
+    "country": {
+      "type": "text",
+      "required": true,
+      "min": 2,
+      "max": 60
+    }
+  },
+  "locations": {
+    "name": {
+      "type": "text",
+      "required": true,
+      "min": 2,
+      "max": 80,
+      "unique": true
+    },
+    "address": {
+      "type": "text",
+      "required": true,
+      "min": 5,
+      "max": 200
+    },
+    "phone": {
+      "type": "phone",
+      "required": true,
+      "min": 10,
+      "max": 30
+    }
+  },
+  "equipment": {
+    "name": {
+      "type": "text",
+      "required": true,
+      "min": 2,
+      "max": 120
+    },
+    "sku": {
+      "type": "text",
+      "required": true,
+      "min": 3,
+      "max": 30,
+      "unique": true
+    },
+    "category_id": {
+      "type": "reference",
+      "required": true,
+      "min": 1,
+      "max": 2147483647,
+      "reference": "categories"
+    },
+    "brand_id": {
+      "type": "reference",
+      "required": true,
+      "min": 1,
+      "max": 2147483647,
+      "reference": "brands"
+    },
+    "daily_rate": {
+      "type": "integer",
+      "required": true,
+      "min": 1,
+      "max": 50000
+    },
+    "deposit": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "max": 300000
+    },
+    "weight_grams": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "max": 500000
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "min": 0,
+      "max": 1000
+    }
+  },
+  "units": {
+    "inventory_code": {
+      "type": "text",
+      "required": true,
+      "min": 3,
+      "max": 30,
+      "unique": true
+    },
+    "equipment_id": {
+      "type": "reference",
+      "required": true,
+      "min": 1,
+      "max": 2147483647,
+      "reference": "equipment"
+    },
+    "location_id": {
+      "type": "reference",
+      "required": true,
+      "min": 1,
+      "max": 2147483647,
+      "reference": "locations"
+    },
+    "state": {
+      "type": "choice",
+      "required": true,
+      "min": 0,
+      "max": 200,
+      "choices": {
+        "ready": "Готов к аренде",
+        "maintenance": "На проверке",
+        "retired": "Списан"
+      }
+    },
+    "acquired_on": {
+      "type": "date",
+      "required": true,
+      "min": 0,
+      "max": 200
+    },
+    "note": {
+      "type": "text",
+      "required": false,
+      "min": 0,
+      "max": 500
+    }
+  },
+  "customers": {
+    "full_name": {
+      "type": "text",
+      "required": true,
+      "min": 2,
+      "max": 100
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "min": 0,
+      "max": 254,
+      "unique": true
+    },
+    "phone": {
+      "type": "phone",
+      "required": true,
+      "min": 10,
+      "max": 30
+    }
+  },
+  "loyalty_cards": {
+    "customer_id": {
+      "type": "reference",
+      "required": true,
+      "min": 1,
+      "max": 2147483647,
+      "reference": "customers"
+    },
+    "number": {
+      "type": "text",
+      "required": true,
+      "min": 9,
+      "max": 9,
+      "unique": true
+    },
+    "discount_percent": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "max": 10
+    },
+    "issued_on": {
+      "type": "date",
+      "required": true,
+      "min": 0,
+      "max": 200
+    },
+    "expires_on": {
+      "type": "date",
+      "required": true,
+      "min": 0,
+      "max": 200
+    }
+  },
+  "services": {
+    "name": {
+      "type": "text",
+      "required": true,
+      "min": 2,
+      "max": 80,
+      "unique": true
+    },
+    "price": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "max": 50000
+    },
+    "description": {
+      "type": "text",
+      "required": false,
+      "min": 0,
+      "max": 500
+    }
+  },
+  "rentals": {
+    "customer_id": {
+      "type": "reference",
+      "required": true,
+      "min": 1,
+      "max": 2147483647,
+      "reference": "customers"
+    },
+    "location_id": {
+      "type": "reference",
+      "required": true,
+      "min": 1,
+      "max": 2147483647,
+      "reference": "locations"
+    },
+    "start_on": {
+      "type": "date",
+      "required": true,
+      "min": 0,
+      "max": 200
+    },
+    "end_on": {
+      "type": "date",
+      "required": true,
+      "min": 0,
+      "max": 200
+    },
+    "notes": {
+      "type": "text",
+      "required": false,
+      "min": 0,
+      "max": 500
+    }
+  }
+}
