@@ -69,6 +69,17 @@ Future<GoRouter> mountApp(
 }
 
 void main() {
+  testWidgets('A forbidden destination stays forbidden after session restore', (
+    tester,
+  ) async {
+    final router = await mountApp(
+      tester,
+      path: '/loading?next=%2Fdesk',
+      role: AppRole.admin,
+    );
+    expect(router.routeInformationProvider.value.uri.path, '/forbidden');
+    expect(find.text('Этот раздел недоступен для вашей роли.'), findsOneWidget);
+  });
   testWidgets('A shared URL can select sorting by creation date', (
     tester,
   ) async {

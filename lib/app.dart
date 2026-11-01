@@ -62,9 +62,10 @@ GoRouter createRouter(AuthState auth) => GoRouter(
     }
     if (path == '/' ||
         ['/loading', '/login', '/register', '/startup-error'].contains(path)) {
-      return next != null && mayOpen(auth.role, Uri.parse(next).path)
-          ? next
-          : roleHome(auth.role);
+      if (next != null) {
+        return mayOpen(auth.role, Uri.parse(next).path) ? next : '/forbidden';
+      }
+      return roleHome(auth.role);
     }
     if (!mayOpen(auth.role, path)) return '/forbidden';
     final entity = state.pathParameters['entity'];
